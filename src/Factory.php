@@ -38,21 +38,22 @@ class Factory {
         $headers['typ'] = 'JWT';
         $headers['alg'] = $this->signer ? $this->signer->getAlgorithm() : 'none';
 
-        $payload = $this->generatePayload($claims, $headers);
+        $segments = $this->encodeSegments($claims, $headers);
+        $signature = '';
 
         if ($this->signer) {
-            $signature = $this->signer->sign($payload);
-            $payload .= $this->encoder->base64Encode($signature);
+            $signature = $this->signer->sign(implode('.', $segments));
         }
 
-        return new Token($payload, $claims, $headers, $signature ?? null);
+        $segments[] = $this->encoder->base64Encode($signature);
+
+        return new Token(implode('.', $segments), $claims, $headers, $signature);
     }
 
-    private function generatePayload(array $claims, array $headers) {
-        $segments = [];
-        $segments[] = $this->encoder->base64Encode($this->encoder->jsonEncode($headers));
-        $segments[] = $this->encoder->base64Encode($this->encoder->jsonEncode($claims));
-
-        return sprintf('%s.%s.', ...$segments);
+    private function encodeSegments(array $claims, array $headers) : array {
+        return [
+            $this->encoder->base64Encode($this->encoder->jsonEncode($headers)),
+            $this->encoder->base64Encode($this->encoder->jsonEncode($claims)),
+        ];
     }
 }

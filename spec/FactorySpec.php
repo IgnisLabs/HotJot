@@ -33,7 +33,7 @@ class FactorySpec extends ObjectBehavior
         $encoder->base64Encode('claims')->willReturn('claims');
         $encoder->base64Encode('signature')->willReturn('signature');
 
-        $signer->sign('headers.claims.')->shouldBeCalled()->willReturn('signature');
+        $signer->sign('headers.claims')->shouldBeCalled()->willReturn('signature');
 
         /** @var Token $token */
         $token = $this->create($claims, $headers);
@@ -53,8 +53,9 @@ class FactorySpec extends ObjectBehavior
         $encoder->jsonEncode($claims)->willReturn('claims');
         $encoder->base64Encode('headers')->willReturn('headers');
         $encoder->base64Encode('claims')->willReturn('claims');
+        $encoder->base64Encode('')->willReturn('');
 
-        $signer->sign('headers.claims.')->shouldNotBeCalled();
+        $signer->sign('headers.claims')->shouldNotBeCalled();
 
         /** @var Token $token */
         $token = $this->create($claims, $headers, false);
