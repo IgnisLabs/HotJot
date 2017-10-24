@@ -16,8 +16,9 @@ interface Signer {
     /**
      * Verify a token
      * @param Token $token
+     * @return bool
      */
-    public function verify(Token $token);
+    public function verify(Token $token) : bool;
 
     /**
      * Get the currently used algorithm
