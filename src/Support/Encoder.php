@@ -25,9 +25,9 @@ class Encoder implements EncoderContract {
     /**
      * Decode a JSON string into an associative array
      * @param string $json
-     * @return array
+     * @return array|null
      */
-    public function jsonDecode(string $json) : array {
+    public function jsonDecode(string $json) : ?array {
         $array = json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
 
         if ($errno = json_last_error()) {
@@ -49,9 +49,9 @@ class Encoder implements EncoderContract {
     /**
      * URL-safe base64 decoding
      * @param string $input
-     * @return string
+     * @return string|null
      */
-    public function base64Decode(string $input) : string {
-        return base64_decode(strtr($input, '-_', '+/'));
+    public function base64Decode(string $input) : ?string {
+        return base64_decode(strtr($input, '-_', '+/')) ?? null;
     }
 }

@@ -14,9 +14,9 @@ interface Encoder {
     /**
      * Decode a JSON string into an associative array
      * @param string $json
-     * @return array
+     * @return array|null
      */
-    public function jsonDecode(string $json) : array;
+    public function jsonDecode(string $json) : ?array;
 
     /**
      * URL-safe base64 encoding
@@ -28,7 +28,7 @@ interface Encoder {
     /**
      * URL-safe base64 decoding
      * @param string $input
-     * @return string
+     * @return string|null
      */
-    public function base64Decode(string $input) : string;
+    public function base64Decode(string $input) : ?string;
 }
