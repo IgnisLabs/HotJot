@@ -5,6 +5,11 @@ namespace IgnisLabs\HotJot;
 class Token {
 
     /**
+     * @var string
+     */
+    private $payload;
+
+    /**
      * @var array
      */
     private $claims;
@@ -17,12 +22,13 @@ class Token {
     /**
      * @var string
      */
-    private $payload;
+    private $signature;
 
-    public function __construct(array $claims, array $headers = [], string $payload = null) {
+    public function __construct(string $payload, array $claims, array $headers = [], string $signature = null) {
+        $this->payload = $payload;
         $this->claims = $claims;
         $this->headers = $headers;
-        $this->payload = $payload;
+        $this->signature = $signature;
     }
 
     /**
@@ -66,9 +72,9 @@ class Token {
 
     /**
      * Get token payload
-     * @return string|null
+     * @return string
      */
-    public function getPayload() : ?string {
+    public function getPayload() : string {
         return $this->payload;
     }
 
@@ -77,7 +83,6 @@ class Token {
      * @return string|null
      */
     public function getSignature() : ?string {
-        $segments = explode('.', $this->payload);
-        return $segments[2] ?? null;
+        return $this->signature;
     }
 }

@@ -12,7 +12,7 @@ class TokenSpec extends ObjectBehavior
     {
         $claims = ['foo' => 'bar'];
         $headers = ['baz' => 'qux'];
-        $this->beConstructedWith($claims, $headers, 'headers.claims.signature');
+        $this->beConstructedWith('headers.claims.signature', $claims, $headers, 'raw signature');
     }
 
     function it_is_initializable()
@@ -43,7 +43,7 @@ class TokenSpec extends ObjectBehavior
     function it_should_return_datetime_for_date_claims()
     {
         $time = time();
-        $this->beConstructedWith([
+        $this->beConstructedWith('payload', [
             'iat' => $time + 10,
             'nbf' => $time + 20,
             'exp' => $time + 30,
@@ -61,13 +61,13 @@ class TokenSpec extends ObjectBehavior
         $exp->getTimestamp()->shouldBe($time + 30);
     }
 
-    function it_get_token_payload()
+    function it_should_get_token_payload()
     {
         $this->getPayload()->shouldBe('headers.claims.signature');
     }
 
-    function it_get_signature_from_payload()
+    function it_should_get_signature_from_payload()
     {
-        $this->getSignature()->shouldBe('signature');
+        $this->getSignature()->shouldBe('raw signature');
     }
 }
