@@ -135,9 +135,9 @@ $token = $factory->create([
     // etc...
 ]);
 
-$token->getHeader('alg'); // -> Automatically set to HS512
-$token->getClaim('iss'); // -> http://api.example.com
-$token->getClaim('exp'); // -> `DateTime` object
+$token->getHeader('alg'); // -> 'HS512'
+$token->getClaim('iss'); // -> 'http://api.example.com'
+$token->getClaim('exp'); // -> DateTime object
 ```
 
 As you can see, `exp` returns a `DateTime` object, and so will `iat` and `nbf`.
@@ -162,7 +162,8 @@ $token = $factory->create([
     // etc...
 ]);
 
-$token->getSignature(); // null
+$token->getClaim('alg'); // -> 'none'
+$token->getSignature(); // -> null
 ```
 
 ### Parsing
