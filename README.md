@@ -29,19 +29,16 @@ more detail.
 
 **Create a token:**
 ```php
-<?php
 $token = $factory->create($claims, $headers);
 ```
 
 **Verify a token:**
 ```php
-<?php
 $signer->verify($token);
 ```
 
 **Validate a token:**
 ```php
-<?php
 $validator->validate($token);
 ```
 
@@ -63,7 +60,6 @@ You have 3 different options: `HS256`, `HS384`, and `HS512`. All three
 require only an encryption key as a constructor parameter.
 
 ```php
-<?php
 $signer = new \IgnisLabs\HotJot\Signer\HMAC\HS512('encryption key');
 ```
 
@@ -91,8 +87,6 @@ three require both private and public keys, and the passphrase if your
 private key is protected.
 
 ```php
-<?php
-
 $privateKey = file_get_contents('/path/to/private.pem');
 $publicKey = file_get_contents('/path/to/public.pem');
 
@@ -115,7 +109,6 @@ It will always return an empty string as a signature, and verification
 will always fail.
 
 ```php
-<?php
 $signer = new \IgnisLabs\HotJot\Signer\None;
 ```
 
@@ -131,8 +124,6 @@ get a `Token` object with a few handy methods.
 To crete secured tokens, use any signer except `None`.
 
 ```php
-<?php
-
 $signer = new \IgnisLabs\HotJot\Signer\HMAC\HS512('encryption key');
 $factory = new \IgnisLabs\HotJot\Factory($signer);
 
@@ -160,8 +151,6 @@ To create unsecured tokens you need to use the `None` signer.
 > (Yes I know I'm repeating this :P)
 
 ```php
-<?php
-
 $signer = new \IgnisLabs\HotJot\Signer\None;
 $factory = new \IgnisLabs\HotJot\Factory($signer);
 
@@ -186,7 +175,6 @@ When you parse an encoded token, you'll get back a `Token` object, same
 one as with the `Factory`.
 
 ```php
-<?php
 $parser = new \IgnisLabs\HotJot\Parser;
 $token = $parser->parse($encodedTokenString);
 ```
@@ -217,7 +205,6 @@ matches the signer's algorithm. If the algorithms don't match it will
 throw an exception.
 
 ```php
-<?php
 $signer = new \IgnisLabs\HotJot\Signer\RSA\RS512($privateKey, $publicKey, 'passphrase');
 $signer->verify($token); // -> boolean — $token most likely obtained through the parser
 ```
@@ -237,8 +224,6 @@ This library already comes with some useful ones, but you can add as
 many as you need.
 
 ```php
-<?php
-
 use IgnisLabs\HotJot\Validators as 🕵;
 
 $validator = new \IgnisLabs\HotJot\Validator(
@@ -252,8 +237,6 @@ If you want to make any of these validators be required, you can
 instantiate them like this:
 
 ```php
-<?php
-
 use IgnisLabs\HotJot\Validators as 🕵;
 
 $validator = new \IgnisLabs\HotJot\Validator(
