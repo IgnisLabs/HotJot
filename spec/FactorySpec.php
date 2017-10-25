@@ -13,7 +13,6 @@ class FactorySpec extends ObjectBehavior
 {
     function let(Signer $signer, Encoder $encoder)
     {
-        $signer->getAlgorithm()->willReturn('an-alg');
         $this->beConstructedWith($signer, $encoder);
     }
 
@@ -33,6 +32,7 @@ class FactorySpec extends ObjectBehavior
         $encoder->base64Encode('claims')->willReturn('claims');
         $encoder->base64Encode('signature')->willReturn('signature');
 
+        $signer->getAlgorithm()->willReturn('an-alg');
         $signer->sign('headers.claims')->shouldBeCalled()->willReturn('signature');
 
         /** @var Token $token */
@@ -44,8 +44,6 @@ class FactorySpec extends ObjectBehavior
 
     function it_should_create_unsigned_token(Signer $signer, Encoder $encoder)
     {
-        $this->beConstructedWith(null, $encoder);
-
         $claims = ['foo' => 'bar'];
         $headers = ['baz' => 'qux'];
 
@@ -55,7 +53,8 @@ class FactorySpec extends ObjectBehavior
         $encoder->base64Encode('claims')->willReturn('claims');
         $encoder->base64Encode('')->willReturn('');
 
-        $signer->sign('headers.claims')->shouldNotBeCalled();
+        $signer->getAlgorithm()->willReturn('none');
+        $signer->sign('headers.claims')->shouldBeCalled()->willReturn('');
 
         /** @var Token $token */
         $token = $this->create($claims, $headers, false);

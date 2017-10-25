@@ -23,7 +23,7 @@ class Factory {
      * @param Signer|null          $signer
      * @param EncoderContract|null $encoder
      */
-    public function __construct(Signer $signer = null, EncoderContract $encoder = null) {
+    public function __construct(Signer $signer, EncoderContract $encoder = null) {
         $this->signer = $signer;
         $this->encoder = $encoder ?? new Encoder;
     }
@@ -36,15 +36,10 @@ class Factory {
      */
     public function create(array $claims, array $headers = []) : Token {
         $headers['typ'] = 'JWT';
-        $headers['alg'] = $this->signer ? $this->signer->getAlgorithm() : 'none';
+        $headers['alg'] = $this->signer->getAlgorithm();
 
         $segments = $this->encodeSegments($claims, $headers);
-        $signature = '';
-
-        if ($this->signer) {
-            $signature = $this->signer->sign(implode('.', $segments));
-        }
-
+        $signature = $this->signer->sign(implode('.', $segments));
         $segments[] = $this->encoder->base64Encode($signature);
 
         return new Token(implode('.', $segments), $claims, $headers, $signature);
