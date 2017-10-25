@@ -2,6 +2,8 @@ HotJot
 ======
 
 [![Build Status](https://img.shields.io/travis/IgnisLabs/HotJot.svg?style=flat-square)](https://travis-ci.org/IgnisLabs/HotJot)
+[![Version](http://img.shields.io/packagist/v/IgnisLabs/HotJot.svg?style=flat-square)](https://packagist.org/packages/IgnisLabs/HotJot)
+![License](http://img.shields.io/github/license/IgnisLabs/HotJot.svg?style=flat-square)
 
 No-frills JWT & JWS library.
 
