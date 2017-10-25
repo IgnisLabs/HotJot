@@ -93,7 +93,8 @@ $publicKey = file_get_contents('/path/to/public.pem');
 $signer = new \IgnisLabs\HotJot\Signer\RSA\RS512($privateKey, $publicKey, 'key passphrase (if any)');
 ```
 
-The *private key* is used signing and the *public key* for verification.
+The *private key* is used for signing and the *public key* for
+verification.
 
 #### `None` Signer
 
@@ -168,9 +169,9 @@ $token->getSignature(); // -> null
 
 ### Parsing
 
-You can parse encoded tokens with the parser. How you obtain the parsed
-token is out of the scope of the library (authorization header, query
-parameter, etc).
+You can parse encoded token strings with the parser. How you obtain the
+encoded token is out of the scope of the library (authorization header,
+query parameter, etc).
 
 When you parse an encoded token, you'll get back a `Token` object, same
 one as with the `Factory`.
@@ -203,7 +204,7 @@ instantiation rather than on verification, leaving less room for error.
 
 All signers will first check the token's `alg` header and check if it
 matches the signer's algorithm. If the algorithms don't match it will
-throw an exception.
+throw a `SignatureVerificationException` exception.
 
 ```php
 $signer = new \IgnisLabs\HotJot\Signer\RSA\RS512($privateKey, $publicKey, 'passphrase');
@@ -216,10 +217,8 @@ Once you have a verified token, you can start to validate it using the
 `Validator`.
 
 The `Validator` is a really simple class that takes a bunch of token
-validators and uses them to validate a token.
-
-These token validators need to implement the
-`IgnisLabs\HotJot\Contracts\TokenValidator` contract.
+validators and uses them to validate a token. The validators don't
+return eny values, but throw exceptions on failure.
 
 This library already comes with some useful ones, but you can add as
 many as you need.
@@ -232,6 +231,8 @@ $validator = new \IgnisLabs\HotJot\Validator(
     new 🕵\NotBeforeValidator, // fails if token used before `nbf`
     new 🕵\ExpiresAtValidator // fails if token is used after `exp`
 );
+
+$validator->validate($token);
 ```
 
 If you want to make any of these validators be required, you can
@@ -245,6 +246,8 @@ $validator = new \IgnisLabs\HotJot\Validator(
     new 🕵\NotBeforeValidator(true),
     new 🕵\ExpiresAtValidator(true)
 );
+
+$validator->validate($token);
 ```
 
 You can create your own validators, you just need them to implement the
