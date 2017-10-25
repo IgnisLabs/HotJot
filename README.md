@@ -257,4 +257,18 @@ You can create your own validators, you just need them to implement the
 `\IgnisLabs\HotJot\Validators\ClaimRequiredTrait` to save you some time
 when creating required validators.
 
+Algorithms
+----------
+
+:heavy_check_mark: none  
+:heavy_check_mark: HS256  
+:heavy_check_mark: HS384  
+:heavy_check_mark: HS512  
+:heavy_check_mark: RS256  
+:heavy_check_mark: RS384  
+:heavy_check_mark: RS512  
+:black_square_button: ES256  
+:black_square_button: ES384  
+:black_square_button: ES512
+
 [1]: https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/
