@@ -3,6 +3,7 @@
 namespace IgnisLabs\HotJot\Signer;
 
 use IgnisLabs\HotJot\Contracts\Signer;
+use IgnisLabs\HotJot\Exception\SignatureVerificationException;
 use IgnisLabs\HotJot\Exception\UnsignedTokenException;
 use IgnisLabs\HotJot\Token;
 
@@ -33,6 +34,10 @@ abstract class HMAC implements Signer {
      * @return bool
      */
     public function verify(Token $token) : bool {
+        if ($token->getHeader('alg') !== (new \ReflectionClass($this))->getShortName()) {
+            throw new SignatureVerificationException("Token algorithm [{$token->getHeader('alg')}] not supported");
+        }
+
         [$header, $claims] = explode('.', $token->getPayload());
         $signature = $token->getSignature();
 

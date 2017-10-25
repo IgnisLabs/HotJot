@@ -20,7 +20,7 @@ class Factory {
 
     /**
      * Factory constructor.
-     * @param Signer|null          $signer
+     * @param Signer               $signer
      * @param EncoderContract|null $encoder
      */
     public function __construct(Signer $signer, EncoderContract $encoder = null) {

@@ -2,6 +2,7 @@
 
 namespace spec\IgnisLabs\HotJot\Signer;
 
+use IgnisLabs\HotJot\Exception\SignatureVerificationException;
 use IgnisLabs\HotJot\Exception\UnsignedTokenException;
 use IgnisLabs\HotJot\Signer\RSA;
 use IgnisLabs\HotJot\Token;
@@ -44,13 +45,21 @@ class RSASpec extends ObjectBehavior
         openssl_sign('some.payload', $sig, static::$KEYRES, 'sha256');
         $token->getPayload()->willReturn('some.payload.baz');
         $token->getSignature()->willReturn($sig);
+        $token->getHeader('alg')->willReturn('RSADouble'); // class name is alg name
         $this->verify($token)->shouldBe(true);
+    }
+
+    function it_should_fail_verification_on_alg_mismatch(Token $token)
+    {
+        $token->getHeader('alg')->willReturn('foo');
+        $this->shouldThrow(new SignatureVerificationException('Token algorithm [foo] not supported'))->duringVerify($token);
     }
 
     function it_should_fail_verification_on_bad_signature(Token $token)
     {
         $token->getPayload()->willReturn('some.payload.baz');
         $token->getSignature()->willReturn('bad signature');
+        $token->getHeader('alg')->willReturn('RSADouble'); // class name is alg name
         $this->verify($token)->shouldBe(false);
     }
 
@@ -58,6 +67,7 @@ class RSASpec extends ObjectBehavior
     {
         $token->getPayload()->willReturn('foo.bar.');
         $token->getSignature()->willReturn();
+        $token->getHeader('alg')->willReturn('RSADouble'); // class name is alg name
         $this->shouldThrow(UnsignedTokenException::class)->duringVerify($token);
     }
 }

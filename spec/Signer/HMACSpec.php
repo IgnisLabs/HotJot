@@ -2,6 +2,7 @@
 
 namespace spec\IgnisLabs\HotJot\Signer;
 
+use IgnisLabs\HotJot\Exception\SignatureVerificationException;
 use IgnisLabs\HotJot\Exception\UnsignedTokenException;
 use IgnisLabs\HotJot\Signer\HMAC;
 use IgnisLabs\HotJot\Token;
@@ -27,18 +28,27 @@ class HMACSpec extends ObjectBehavior {
         $hash = hash_hmac('sha256', 'foo.bar', 'key', true);
         $token->getPayload()->willReturn('foo.bar.baz');
         $token->getSignature()->willReturn($hash);
+        $token->getHeader('alg')->willReturn('HMACDouble'); // class name is alg name
         $this->verify($token)->shouldBe(true);
+    }
+
+    function it_should_fail_verification_on_alg_mismatch(Token $token)
+    {
+        $token->getHeader('alg')->willReturn('foo');
+        $this->shouldThrow(new SignatureVerificationException('Token algorithm [foo] not supported'))->duringVerify($token);
     }
 
     function it_should_fail_verification_on_bad_signature(Token $token) {
         $token->getPayload()->willReturn('foo.bar.baz');
         $token->getSignature()->willReturn('bad signature');
+        $token->getHeader('alg')->willReturn('HMACDouble'); // class name is alg name
         $this->verify($token)->shouldBe(false);
     }
 
     function it_should_fail_verification_if_token_has_no_signature(Token $token) {
         $token->getPayload()->willReturn('foo.bar.');
         $token->getSignature()->willReturn();
+        $token->getHeader('alg')->willReturn('HMACDouble'); // class name is alg name
         $this->shouldThrow(UnsignedTokenException::class)->duringVerify($token);
     }
 }

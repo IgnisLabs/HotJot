@@ -47,6 +47,10 @@ abstract class RSA implements Signer {
      * @return bool
      */
     public function verify(Token $token) : bool {
+        if ($token->getHeader('alg') !== (new \ReflectionClass($this))->getShortName()) {
+            throw new SignatureVerificationException("Token algorithm [{$token->getHeader('alg')}] not supported");
+        }
+
         $verifiablePayload = implode('.', array_slice(explode('.', $token->getPayload()), 0, 2));
         $signature = $token->getSignature();
 
