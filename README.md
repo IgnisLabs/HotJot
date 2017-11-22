@@ -143,7 +143,22 @@ $token->getClaim('iss'); // -> 'http://api.example.com'
 $token->getClaim('exp'); // -> DateTime object
 ```
 
-As you can see, `exp` returns a `DateTime` object, and so will `iat` and `nbf`.
+As you can see, `exp` returns a `DateTime` object, and so will `iat` and
+`nbf`.
+
+If you need to use a different signer for some reason, you can do it
+like this:
+
+```php
+$newFactory = $factory->setSigner($anotherSigner);
+```
+
+The factory is immutable, so when you do this, the current factory
+instance is not modified, instead a new instance is returned with the
+new signer.
+
+This is useful when you want to temporarily change the signature for a
+special use case.
 
 #### Creating Unsecured Tokens
 

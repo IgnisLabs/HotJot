@@ -62,4 +62,15 @@ class FactorySpec extends ObjectBehavior
         $token->getHeader('alg')->shouldBe('none');
         $token->getPayload()->shouldBe('headers.claims.');
     }
+    
+    function it_can_set_a_different_signer_returning_a_new_factory_instance(Signer $signer, Signer $anotherSigner)
+    {
+        $signer->getAlgorithm()->willReturn('foo');
+        $anotherSigner->getAlgorithm()->willReturn('bar');
+
+        $this->getSigner()->getAlgorithm()->shouldBe('foo');
+        $factory = $this->setSigner($anotherSigner);
+        $factory->shouldNotBeLike($this);
+        $factory->getSigner()->getAlgorithm()->shouldBe('bar');
+    }
 }

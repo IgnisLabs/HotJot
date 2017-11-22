@@ -51,4 +51,22 @@ class Factory {
             $this->encoder->base64Encode($this->encoder->jsonEncode($claims)),
         ];
     }
+
+    /**
+     * Get the currently used signer
+     * @return Signer
+     */
+    public function getSigner() : Signer {
+        return $this->signer;
+    }
+
+    /**
+     * Set a different signer
+     * Factory is immutable, so it returns a new instance
+     * @param Signer $signer
+     * @return Factory
+     */
+    public function setSigner(Signer $signer) : Factory {
+        return new static($signer, $this->encoder);
+    }
 }
